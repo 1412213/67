@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBER-SYNTHESIS 2077 | 賽博卡牌合成對戰 - 官方網站</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: #f8fafc; /* 高亮清爽底色 */
+            color: #0f172a;
+            overflow-x: hidden;
+            user-select: none;
+        }
+        .font-cyber { font-family: 'Orbitron', sans-serif; }
+        .font-mono-cyber { font-family: 'Share Tech Mono', monospace; }
+
+        /* Bright Cyber Scanlines Overlay */
+        .scanlines {
+            background: linear-gradient(rgba(0, 0, 0, 0.01) 50%, rgba(0, 240, 255, 0.03) 50%),
+                        linear-gradient(90deg, rgba(0, 240, 255, 0.02), rgba(255, 0, 127, 0.02), rgba(0, 240, 255, 0.02));
+            background-size: 100% 4px, 6px 100%;
+            pointer-events: none;
+        }
+
+        /* Bright Cyber Glows */
+        .neon-glow-cyan { box-shadow: 0 0 25px rgba(0, 210, 255, 0.4); }
+        .neon-glow-magenta { box-shadow: 0 0 25px rgba(236, 72, 153, 0.4); }
+        .neon-text-cyan { text-shadow: 0 0 8px rgba(0, 180, 216, 0.5); }
+        .neon-text-magenta { text-shadow: 0 0 8px rgba(236, 72, 153, 0.5); }
+
+        /* Cyber Button Clip-path */
+        .cyber-btn {
+            clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+            transition: all 0.25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+        }
+        .cyber-btn:hover {
+            filter: brightness(1.1);
+            transform: translateY(-3px) scale(1.02);
+        }
+
+        /* Glitch Effect */
+        .glitch {
+            position: relative;
+        }
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            clip: rect(0, 0, 0, 0);
+        }
+        .glitch::before {
+            left: 2px; text-shadow: -2px 0 #ec4899;
+            animation: glitch-anim 3s infinite linear alternate-reverse;
+        }
+        .glitch::after {
+            left: -2px; text-shadow: -2px 0 #06b6d4;
+            animation: glitch-anim2 2.5s infinite linear alternate-reverse;
+        }
+        @keyframes glitch-anim {
+            0% { clip: rect(10px, 9999px, 30px, 0); }
+            30% { clip: rect(40px, 9999px, 10px, 0); }
+            70% { clip: rect(25px, 9999px, 50px, 0); }
+            100% { clip: rect(35px, 9999px, 5px, 0); }
+        }
+        @keyframes glitch-anim2 {
+            0% { clip: rect(50px, 9999px, 15px, 0); }
+            40% { clip: rect(5px, 9999px, 65px, 0); }
+            80% { clip: rect(30px, 9999px, 10px, 0); }
+            100% { clip: rect(20px, 9999px, 80px, 0); }
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #06b6d4; border-radius: 3px; }
+    </style>
+</head>
+<body class="bg-gradient-to-b from-slate-100 via-sky-50 to-slate-200 text-slate-800 relative selection:bg-cyan-500 selection:text-white">
+
+    <!-- Scanline Background Overlay -->
+    <div class="scanlines fixed inset-0 z-50"></div>
+
+    <!-- NAVBAR -->
+    <nav class="fixed top-0 left-0 w-full z-40 bg-white/90 backdrop-blur-lg border-b border-cyan-500/30 px-4 md:px-8 py-4 flex justify-between items-center shadow-md">
+        <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded bg-cyan-500 border border-cyan-400 flex items-center justify-center font-cyber font-black text-white text-lg shadow-[0_0_12px_rgba(6,182,212,0.6)]">
+                CS
+            </div>
+            <span class="font-cyber font-black text-lg md:text-xl text-slate-900 tracking-widest">
+                CYBER-SYNTHESIS <span class="text-cyan-600 neon-text-cyan">2077</span>
+            </span>
+        </div>
+
+        <!-- Desktop Menu Nav -->
+        <div class="hidden md:flex items-center gap-8 font-mono-cyber text-sm font-bold text-slate-700">
+            <a href="#about" class="hover:text-cyan-600 transition-colors">遊戲簡介</a>
+            <a href="#timeline" class="hover:text-cyan-600 transition-colors">開發歷程</a>
+            <a href="#features" class="hover:text-cyan-600 transition-colors">核心玩法</a>
+            <a href="#platforms" class="hover:text-cyan-600 transition-colors">發售平台</a>
+        </div>
+
+        <a href="#play-now" class="cyber-btn bg-cyan-500 hover:bg-cyan-400 text-white font-cyber font-bold px-5 py-2 text-xs md:text-sm tracking-wider shadow-[0_0_15px_rgba(6,182,212,0.4)]">
+            ▶ 免費試玩
+        </a>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="relative min-h-screen flex items-center justify-center pt-24 pb-12 px-4 overflow-hidden">
+        <!-- Bright Grid Pattern Background -->
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,#cbd5e140_1px,transparent_1px),linear-gradient(to_bottom,#cbd5e140_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
+        <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-cyan-200/50 rounded-full blur-[140px] pointer-events-none"></div>
+
+        <div class="max-w-6xl mx-auto z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <!-- Left Info Column -->
+            <div class="flex flex-col items-start space-y-6">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-cyan-100 border border-cyan-400 text-cyan-800 font-mono-cyber text-xs font-bold tracking-widest uppercase rounded shadow-sm">
+                    <span class="w-2.5 h-2.5 rounded-full bg-cyan-500 animate-ping"></span>
+                    2026 NEXT-GEN CARD BRAWLER
+                </div>
+
+                <h1 class="font-cyber text-4xl sm:text-6xl lg:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-fuchsia-600 to-indigo-600 tracking-wider leading-none glitch drop-shadow-sm" data-text="CYBER-SYNTHESIS 2077">
+                    CYBER-SYNTHESIS 2077
+                </h1>
+
+                <p class="font-mono-cyber text-slate-700 text-base sm:text-lg leading-relaxed bg-white/80 p-5 rounded-xl border border-slate-200 shadow-sm backdrop-blur-sm">
+                    融合<span class="text-cyan-600 font-bold">「60 張獨立故事卡牌」</span>與<span class="text-fuchsia-600 font-bold">「3 階段同卡矩陣超頻合成」</span>的賽博朋克對戰作品。挑戰夜之城最強主控 AI <span class="text-amber-600 font-bold">「NEXUS-9 CORE」</span>，奪回掌控權！
+                </p>
+
+                <!-- CTA Buttons -->
+                <div class="flex flex-wrap gap-4 w-full pt-2">
+                    <a href="#play-now" class="cyber-btn flex-1 min-w-[200px] text-center bg-gradient-to-r from-cyan-500 via-sky-500 to-fuchsia-500 hover:from-cyan-400 hover:to-fuchsia-400 text-white font-cyber font-bold py-4 px-8 text-lg neon-glow-cyan">
+                        🎮 立即免費網頁試玩
+                    </a>
+                    <a href="#platforms" class="cyber-btn bg-white border-2 border-fuchsia-500 text-fuchsia-600 hover:bg-fuchsia-50 font-cyber font-bold py-4 px-8 text-base shadow-sm">
+                        ⚡ 願望清單
+                    </a>
+                </div>
+
+                <!-- Platform Badges Mini -->
+                <div class="flex items-center gap-6 pt-2 text-xs font-mono-cyber text-slate-600 font-semibold">
+                    <span class="flex items-center gap-2"><svg class="w-5 h-5 fill-current text-cyan-600" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2zm0 18a8 8 0 0 1-8-8 8 8 0 0 1 8-8 8 8 0 0 1 8 8 8 8 0 0 1-8 8z"/></svg> Steam 預定上架</span>
+                    <span class="flex items-center gap-2"><svg class="w-5 h-5 fill-current text-fuchsia-600" viewBox="0 0 24 24"><path d="M12 2L2 7v10l10 5 10-5V7L12 2z"/></svg> Epic Games Store</span>
+                </div>
+            </div>
+
+            <!-- Right Visual Banner Card Showcase -->
+            <div class="relative flex justify-center">
+                <div class="relative w-full max-w-md aspect-[3/4] bg-white border-2 border-cyan-400 rounded-2xl p-4 shadow-xl flex flex-col justify-between overflow-hidden">
+                    <div class="absolute -top-12 -right-12 w-48 h-48 bg-fuchsia-200/50 rounded-full blur-3xl"></div>
+                    
+                    <div class="flex justify-between items-center border-b border-cyan-200 pb-2 z-10">
+                        <span class="font-cyber text-xs text-cyan-700 font-bold">OFFICIAL COVER ART</span>
+                        <span class="font-mono-cyber text-[11px] font-bold px-2.5 py-0.5 bg-fuchsia-100 text-fuchsia-700 rounded border border-fuchsia-300">SYNTHESIS TIER 4</span>
+                    </div>
+
+                    <!-- Holographic Card Display -->
+                    <div class="my-auto py-6 flex justify-center items-center relative z-10">
+                        <div class="w-64 h-88 bg-gradient-to-b from-slate-900 via-slate-800 to-cyan-950 border-2 border-cyan-300 rounded-lg p-3 text-center flex flex-col justify-between neon-glow-cyan transform rotate-1 hover:rotate-0 transition-transform duration-300">
+                            <div class="flex justify-between items-center text-xs font-cyber">
+                                <span class="text-cyan-300 font-bold">5 EP</span>
+                                <span class="text-yellow-300 font-bold">TIER MAX</span>
+                            </div>
+                            <div class="h-36 bg-cyan-900/40 border border-cyan-400/60 rounded flex items-center justify-center my-2 shadow-inner">
+                                <div class="text-center">
+                                    <div class="text-5xl mb-1 drop-shadow-[0_0_10px_rgba(0,240,255,0.8)]">⚔️</div>
+                                    <div class="text-xs font-mono-cyber font-bold text-cyan-200">夜之城傳奇武士</div>
+                                </div>
+                            </div>
+                            <div class="bg-slate-950 p-2.5 rounded text-left border border-cyan-500/50">
+                                <div class="text-xs font-mono-cyber text-slate-200">戰力: <strong class="text-cyan-300 text-base">142 ATK</strong></div>
+                                <div class="text-[10px] font-mono-cyber text-slate-300 truncate">憑藉極速義體反應切碎所有來犯之敵。</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center font-mono-cyber text-xs text-slate-600 font-semibold border-t border-cyan-200 pt-2 z-10">
+                        點擊下方預覽區開始體會卡牌超頻合成！
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION: ABOUT & FEATURES -->
+    <section id="about" class="py-20 px-4 bg-white border-y border-slate-200 relative">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="font-cyber text-3xl sm:text-4xl font-bold text-cyan-600 mb-4 tracking-wider neon-text-cyan">
+                    // 遊戲核心特色
+                </h2>
+                <p class="font-mono-cyber text-slate-600 text-base">
+                    從簡單的牌組構築，到深度的超頻合成。體驗前所未有的賽博朋克戰術攻防！
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="bg-slate-50 border-2 border-cyan-300 hover:border-cyan-500 p-6 rounded-2xl transition-all hover:-translate-y-2 shadow-md">
+                    <div class="w-12 h-12 rounded-xl bg-cyan-500 text-white flex items-center justify-center text-2xl mb-4 shadow-md">
+                        🎴
+                    </div>
+                    <h3 class="font-cyber text-lg font-bold text-slate-900 mb-2">60 張獨立故事卡牌</h3>
+                    <p class="font-mono-cyber text-sm text-slate-600 leading-relaxed">
+                        劃分為駭客、生化改造、重型機甲、賽博義體、AI構建體與合成戰士等 6 大陣營，每張皆擁有精美的獨立背景故事與動態視覺。
+                    </p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="bg-slate-50 border-2 border-fuchsia-300 hover:border-fuchsia-500 p-6 rounded-2xl transition-all hover:-translate-y-2 shadow-md">
+                    <div class="w-12 h-12 rounded-xl bg-fuchsia-500 text-white flex items-center justify-center text-2xl mb-4 shadow-md">
+                        ⚡
+                    </div>
+                    <h3 class="font-cyber text-lg font-bold text-slate-900 mb-2">3 階同卡超頻合成</h3>
+                    <p class="font-mono-cyber text-sm text-slate-600 leading-relaxed">
+                        相同卡牌可拖曳或一鍵進行最高 3 次合成（最高突破至 Tier 4），使戰力呈現爆發式提升，扭轉戰場局勢！
+                    </p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="bg-slate-50 border-2 border-amber-300 hover:border-amber-500 p-6 rounded-2xl transition-all hover:-translate-y-2 shadow-md">
+                    <div class="w-12 h-12 rounded-xl bg-amber-500 text-white flex items-center justify-center text-2xl mb-4 shadow-md">
+                        🧠
+                    </div>
+                    <h3 class="font-cyber text-lg font-bold text-slate-900 mb-2">戰術 AI 對手：NEXUS-9</h3>
+                    <p class="font-mono-cyber text-sm text-slate-600 leading-relaxed">
+                        配備動態打擊演算法的 AI 主控，會根據你的陣線動態進行兵力部署與合成進攻，考驗你的防禦與爆發時機。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION: TIMELINE / DEVELOPMENT STORY (開發歷程) -->
+    <section id="timeline" class="py-20 px-4 relative bg-slate-50">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="font-cyber text-3xl sm:text-4xl font-bold text-fuchsia-600 mb-4 tracking-wider neon-text-magenta">
+                    // 開發與進化歷程
+                </h2>
+                <p class="font-mono-cyber text-slate-600 text-base">
+                    記錄《CYBER-SYNTHESIS 2077》從概念誕生到完整現代視覺與上架規劃的里程碑
+                </p>
+            </div>
+
+            <div class="relative border-l-2 border-cyan-500 ml-4 md:ml-32 space-y-12">
+                <!-- Step 1 -->
+                <div class="relative pl-8 md:pl-10">
+                    <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-cyan-500 shadow-[0_0_10px_#06b6d4]"></div>
+                    <div class="hidden md:block absolute -left-32 top-0 font-mono-cyber text-xs text-cyan-700 font-bold">PHASE 01</div>
+                    <h3 class="font-cyber text-xl font-bold text-slate-900">構想與核心卡牌機制確立</h3>
+                    <p class="font-mono-cyber text-sm text-slate-600 mt-2 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                        規劃 60 張具備基礎數值之賽博朋克卡牌，定義「相同卡牌最多合成 3 次提升數值」的核心遊戲循環，並建立 AI 對手基本邏輯。
+                    </p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="relative pl-8 md:pl-10">
+                    <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-fuchsia-500 shadow-[0_0_10px_#d946ef]"></div>
+                    <div class="hidden md:block absolute -left-32 top-0 font-mono-cyber text-xs text-fuchsia-700 font-bold">PHASE 02</div>
+                    <h3 class="font-cyber text-xl font-bold text-slate-900">故事背景與視覺圖片重構</h3>
+                    <p class="font-mono-cyber text-sm text-slate-600 mt-2 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                        全面強化 60 張卡牌的敘事背景，設計專屬動態 SVG 圖示與 6 大陣營視覺，讓卡牌與敘事深度結合。
+                    </p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="relative pl-8 md:pl-10">
+                    <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-amber-500 shadow-[0_0_10px_#f59e0b]"></div>
+                    <div class="hidden md:block absolute -left-32 top-0 font-mono-cyber text-xs text-amber-700 font-bold">PHASE 03</div>
+                    <h3 class="font-cyber text-xl font-bold text-slate-900">賽博朋克風格封面設計</h3>
+                    <p class="font-mono-cyber text-sm text-slate-600 mt-2 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                        打造融合霓虹都市、全息卡牌與 HUD 介面的宣傳封面，定調《CYBER-SYNTHESIS 2077》的極致美學概念。
+                    </p>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="relative pl-8 md:pl-10">
+                    <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-emerald-500 shadow-[0_0_10px_#10b981]"></div>
+                    <div class="hidden md:block absolute -left-32 top-0 font-mono-cyber text-xs text-emerald-700 font-bold">PHASE 04</div>
+                    <h3 class="font-cyber text-xl font-bold text-slate-900">跨平台發行與一頁式網頁發布</h3>
+                    <p class="font-mono-cyber text-sm text-slate-600 mt-2 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                        推出整合 HTML5 網頁版線上直接試玩、完整圖鑑覽閱，以及 Steam / Epic 願望清單預約一頁式門戶。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION: LIVE DEMO IFRAME (網頁線上直接試玩區) -->
+    <section id="play-now" class="py-20 px-4 bg-white border-t border-slate-200">
+        <div class="max-w-6xl mx-auto text-center">
+            <h2 class="font-cyber text-3xl sm:text-4xl font-bold text-cyan-600 mb-2 tracking-wider neon-text-cyan">
+                // 網頁版即時對戰試玩
+            </h2>
+            <p class="font-mono-cyber text-slate-600 text-base mb-8">
+                無須下載，直接在下方控制台進入矩陣，與 AI 主控展開對決！
+            </p>
+
+            <div class="w-full min-h-[650px] bg-slate-950 border-2 border-cyan-400 rounded-2xl overflow-hidden shadow-2xl relative text-slate-100 flex flex-col justify-between p-2 md:p-4 selection:bg-cyan-500 selection:text-white" id="embedded-game-container">
+                <!-- 遊戲嵌入畫面內容 -->
+                <div id="game-ui" class="relative z-10 h-full w-full flex flex-col justify-between gap-3">
+                    
+                    <!-- AI OPPONENT BOARD (TOP) -->
+                    <div class="w-full bg-slate-900/90 border border-red-900/50 rounded-lg p-3 relative flex flex-col gap-2 shadow-lg">
+                        <div class="flex justify-between items-center border-b border-red-900/30 pb-1.5">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded bg-red-950 border border-red-500/60 flex items-center justify-center font-cyber font-bold text-red-400 text-xs">
+                                    N-9
+                                </div>
+                                <div class="text-left">
+                                    <div class="font-cyber text-xs md:text-sm font-bold text-red-400 flex items-center gap-2">
+                                        NEXUS-9 CORE <span class="text-[10px] text-red-400/80 font-mono-cyber">[AI 戰術核心]</span>
+                                    </div>
+                                    <div class="text-[10px] font-mono-cyber text-slate-400" id="ai-status-text">狀態: 戰術計算中...</div>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col items-end w-48 md:w-64">
+                                <div class="flex justify-between w-full text-xs font-mono-cyber mb-0.5">
+                                    <span class="text-red-400">AI 主控血量</span>
+                                    <span id="ai-hp-text" class="font-bold text-red-400">100 / 100</span>
+                                </div>
+                                <div class="w-full h-2.5 bg-slate-950 rounded-sm border border-red-900/50 overflow-hidden">
+                                    <div id="ai-hp-bar" class="h-full bg-gradient-to-r from-red-600 to-fuchsia-600 transition-all duration-300 w-full"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-between items-center text-[11px] font-mono-cyber text-slate-400 px-1">
+                            <div>AI 手牌: <span id="ai-hand-count" class="text-red-300 font-bold">5</span> 張</div>
+                            <div>AI 能量: <span id="ai-energy-text" class="text-yellow-400 font-bold">3/10</span></div>
+                        </div>
+
+                        <div id="ai-slots" class="grid grid-cols-4 gap-2 md:gap-3 my-1"></div>
+                    </div>
+
+                    <!-- CENTER HUD / BATTLE COMMANDER -->
+                    <div class="my-1 flex flex-col md:flex-row items-center justify-between gap-2 bg-slate-900/90 border border-cyan-900/50 rounded-lg p-2.5">
+                        <div class="flex items-center gap-3 w-full md:w-auto overflow-hidden">
+                            <div id="turn-badge" class="px-3 py-1 bg-cyan-950 border border-cyan-500 text-cyan-300 font-cyber text-xs font-bold whitespace-nowrap">
+                                YOUR TURN
+                            </div>
+                            <div class="text-xs font-mono-cyber text-slate-300 truncate max-w-md text-left" id="game-log">
+                                > 戰鬥系統就緒。請點擊或拖曳手牌至槽位，或進行相同卡牌合成。
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2 w-full md:w-auto justify-end">
+                            <button id="auto-synth-btn" class="cyber-btn bg-slate-800 border border-fuchsia-500/60 text-fuchsia-300 text-xs font-mono-cyber px-3 py-2 hover:bg-fuchsia-900/50">
+                                ⚡ 一鍵合成
+                            </button>
+                            <button id="end-turn-btn" class="cyber-btn bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-cyber font-bold text-xs px-5 py-2 tracking-wider shadow-[0_0_12px_rgba(0,240,255,0.3)]">
+                                結束回合 (交戰) ▶
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- PLAYER BOARD (BOTTOM) -->
+                    <div class="w-full bg-slate-900/90 border border-cyan-900/50 rounded-lg p-3 relative flex flex-col gap-2 shadow-lg">
+                        <div id="player-slots" class="grid grid-cols-4 gap-2 md:gap-3 my-1"></div>
+
+                        <div class="flex justify-between items-center border-t border-cyan-900/30 pt-1.5 mt-1">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded bg-cyan-950 border border-cyan-500/60 flex items-center justify-center font-cyber font-bold text-cyan-300 text-xs">
+                                    NET
+                                </div>
+                                <div class="text-left">
+                                    <div class="font-cyber text-xs md:text-sm font-bold text-cyan-400">
+                                        OPERATOR PLAYER <span class="text-[10px] text-cyan-400/80 font-mono-cyber">[反抗軍矩陣]</span>
+                                    </div>
+                                    <div class="text-[10px] font-mono-cyber text-slate-400">
+                                        牌組剩餘: <span id="player-deck-count" class="text-cyan-300 font-bold">20</span> 張
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-4">
+                                <div class="flex flex-col items-center">
+                                    <span class="text-[10px] font-mono-cyber text-yellow-400">ENERGY</span>
+                                    <div class="font-cyber text-base font-bold text-yellow-400" id="player-energy-text">
+                                        3 / 3
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col items-end w-40 md:w-56">
+                                    <div class="flex justify-between w-full text-xs font-mono-cyber mb-0.5">
+                                        <span class="text-cyan-400">玩家核心血量</span>
+                                        <span id="player-hp-text" class="font-bold text-cyan-300">100 / 100</span>
+                                    </div>
+                                    <div class="w-full h-2.5 bg-slate-950 rounded-sm border border-cyan-900/50 overflow-hidden">
+                                        <div id="player-hp-bar" class="h-full bg-gradient-to-r from-cyan-500 to-emerald-400 transition-all duration-300 w-full"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-1">
+                            <div class="text-[10px] font-mono-cyber text-slate-400 mb-1 flex justify-between">
+                                <span>手牌區 (可點擊或拖曳相同卡牌合成，最高 3 次合成升至 TIER 4):</span>
+                                <span id="synthesis-hint" class="text-fuchsia-400 hidden animate-pulse">💡 發現可合成卡牌！</span>
+                            </div>
+                            <div id="player-hand" class="flex items-center gap-2 overflow-x-auto pb-2 min-h-[140px] px-1"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION: PLATFORMS & WISHLIST (發售平台) -->
+    <section id="platforms" class="py-20 px-4 relative bg-slate-50">
+        <div class="max-w-5xl mx-auto text-center">
+            <h2 class="font-cyber text-3xl sm:text-4xl font-bold text-indigo-700 mb-4 tracking-wider">
+                // 支持預約與加入願望清單
+            </h2>
+            <p class="font-mono-cyber text-slate-600 text-base mb-12">
+                《CYBER-SYNTHESIS 2077》即將登上各大主流遊戲平台！
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Steam Platform Card -->
+                <div class="bg-white border-2 border-slate-200 hover:border-cyan-500 p-8 rounded-2xl flex flex-col items-center justify-between space-y-6 transition-all hover:scale-105 shadow-md">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center font-black text-slate-800 text-2xl shadow-inner">
+                            ⚙️
+                        </div>
+                        <div class="text-left">
+                            <div class="font-cyber font-bold text-xl text-slate-900">STEAM STORE</div>
+                            <div class="font-mono-cyber text-xs text-slate-500">PC / Steam Deck 相容</div>
+                        </div>
+                    </div>
+                    <p class="font-mono-cyber text-xs text-slate-600">
+                        條目即將上架，立即加入 Steam 願望清單，獲得最新更新情報與搶先體驗通知。
+                    </p>
+                    <button onclick="alert('已成功將《CYBER-SYNTHESIS 2077》加入 Steam 願望清單！')" class="cyber-btn w-full bg-cyan-500 hover:bg-cyan-400 text-white font-cyber font-bold py-3 text-sm shadow-md">
+                        + 加入 STEAM 願望清單
+                    </button>
+                </div>
+
+                <!-- Epic Games Platform Card -->
+                <div class="bg-white border-2 border-slate-200 hover:border-fuchsia-500 p-8 rounded-2xl flex flex-col items-center justify-between space-y-6 transition-all hover:scale-105 shadow-md">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center font-black text-slate-800 text-2xl shadow-inner">
+                            ⚡
+                        </div>
+                        <div class="text-left">
+                            <div class="font-cyber font-bold text-xl text-slate-900">EPIC GAMES</div>
+                            <div class="font-mono-cyber text-xs text-slate-500">PC Store 獨家合作</div>
+                        </div>
+                    </div>
+                    <p class="font-mono-cyber text-xs text-slate-600">
+                        預約 Epic Games Store 專屬預購獎勵卡牌塗裝。
+                    </p>
+                    <button onclick="alert('已成功預約 Epic Games Store 發售提醒！')" class="cyber-btn w-full bg-fuchsia-500 hover:bg-fuchsia-400 text-white font-cyber font-bold py-3 text-sm shadow-md">
+                        + 預約 EPIC 專屬特典
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-slate-200 bg-white py-8 px-4 text-center font-mono-cyber text-xs text-slate-500">
+        <p class="mb-2 text-slate-700">CYBER-SYNTHESIS 2077 © 2026 FACTION CONFLICT ENGINE. ALL RIGHTS RESERVED.</p>
+        <p class="text-slate-500">賽博朋克一頁式介紹網站 // 60 CARDS MATRIX SYNTHESIS BRAWLER</p>
+    </footer>
+
+    <!-- EMBEDDED GAME LOGIC -->
+    <script>
+        const FACTIONS = {
+            'Hacker': { name: '駭客部隊', color: '#00f0ff' },
+            'Bio-Aug': { name: '生化改造', color: '#ff007f' },
+            'Mech': { name: '重型機甲', color: '#00ffaa' },
+            'Cyberware': { name: '賽博義體', color: '#ff3333' },
+            'AI': { name: 'AI 構建體', color: '#f3e500' },
+            'Synth': { name: '合成戰士', color: '#a855f7' }
+        };
+
+        const CARD_DATA_RAW = [
+            { f: 'Hacker', name: '深網漫遊者', cost: 1, power: 20 },
+            { f: 'Hacker', name: '代碼刺客', cost: 1, power: 25 },
+            { f: 'Hacker', name: '數據幽靈', cost: 2, power: 40 },
+            { f: 'Hacker', name: '矩陣編譯師', cost: 2, power: 45 },
+            { f: 'Hacker', name: '零日漏洞領主', cost: 3, power: 65 },
+            { f: 'Bio-Aug', name: '狂暴生化犬', cost: 1, power: 22 },
+            { f: 'Bio-Aug', name: '突變刺客', cost: 1, power: 28 },
+            { f: 'Bio-Aug', name: '生化再生者', cost: 2, power: 42 },
+            { f: 'Mech', name: '偵察蜂群機甲', cost: 1, power: 18 },
+            { f: 'Mech', name: '防暴防護裝甲', cost: 1, power: 24 },
+            { f: 'Cyberware', name: '霓虹熱能單分子刀', cost: 1, power: 22 },
+            { f: 'Cyberware', name: '義體突擊者', cost: 1, power: 26 },
+            { f: 'AI', name: '哨兵無人機', cost: 1, power: 19 },
+            { f: 'AI', name: '數值演算核心', cost: 1, power: 25 },
+            { f: 'Synth', name: '複製人步兵', cost: 1, power: 21 },
+            { f: 'Synth', name: '人造血液衝鋒隊', cost: 1, power: 27 }
+        ];
+
+        const CARDS_DATABASE = CARD_DATA_RAW.map((c, i) => ({
+            id: i + 1, name: c.name, faction: c.f, cost: c.cost, basePower: c.power
+        }));
+
+        function generateCardArtSVG(card, tier = 1) {
+            const f = FACTIONS[card.faction] || FACTIONS['Hacker'];
+            const mult = tier === 1 ? 1 : tier === 2 ? 1.5 : tier === 3 ? 2.2 : 3.0;
+            const currentPower = Math.round(card.basePower * mult);
+
+            return `
+            <svg viewBox="0 0 180 240" class="w-full h-full rounded select-none pointer-events-none">
+                <rect width="180" height="240" fill="#090d16" rx="6" />
+                <rect x="3" y="3" width="174" height="234" fill="none" stroke="${f.color}" stroke-width="1.5" rx="5" />
+                <polygon points="3,3 45,3 55,26 3,26" fill="${f.color}" />
+                <text x="20" y="20" fill="#000" font-family="Orbitron" font-weight="900" font-size="14" text-anchor="middle">${card.cost}</text>
+                <text x="90" y="100" fill="${f.color}" font-family="Orbitron" font-weight="900" font-size="32" text-anchor="middle">⚔️</text>
+                <text x="90" y="155" fill="#ffffff" font-family="Orbitron" font-weight="700" font-size="11" text-anchor="middle">${card.name}</text>
+                <rect x="25" y="175" width="130" height="35" fill="rgba(15, 23, 42, 0.9)" stroke="${f.color}" stroke-width="1.5" rx="4" />
+                <text x="90" y="198" fill="${f.color}" font-family="Orbitron" font-weight="900" font-size="16" text-anchor="middle">${currentPower} ATK</text>
+            </svg>`;
+        }
+
+        const gameState = {
+            player: { hp: 100, maxHp: 100, energy: 3, maxEnergy: 3, deck: [], hand: [], board: [null, null, null, null] },
+            ai: { hp: 100, maxHp: 100, energy: 3, maxEnergy: 3, deck: [], hand: [], board: [null, null, null, null] },
+            selectedHandIndex: null, draggedHandIndex: null
+        };
+
+        function initEmbeddedGame() {
+            const deck = [...CARDS_DATABASE, ...CARDS_DATABASE];
+            gameState.player.deck = deck.slice(0, 15).map(c => ({ ...c, tier: 1 }));
+            gameState.ai.deck = deck.slice(15, 30).map(c => ({ ...c, tier: 1 }));
+            
+            for(let i=0; i<4; i++) {
+                if(gameState.player.deck.length) gameState.player.hand.push(gameState.player.deck.pop());
+                if(gameState.ai.deck.length) gameState.ai.hand.push(gameState.ai.deck.pop());
+            }
+            updateGameUI();
+        }
+
+        function getCardPower(card) {
+            if (!card) return 0;
+            const mult = card.tier === 1 ? 1 : card.tier === 2 ? 1.5 : card.tier === 3 ? 2.2 : 3.0;
+            return Math.round(card.basePower * mult);
+        }
+
+        function updateGameUI() {
+            document.getElementById('player-hp-text').innerText = `${gameState.player.hp} / 100`;
+            document.getElementById('player-hp-bar').style.width = `${gameState.player.hp}%`;
+            document.getElementById('player-energy-text').innerText = `${gameState.player.energy} / ${gameState.player.maxEnergy}`;
+            
+            document.getElementById('ai-hp-text').innerText = `${gameState.ai.hp} / 100`;
+            document.getElementById('ai-hp-bar').style.width = `${gameState.ai.hp}%`;
+            document.getElementById('ai-energy-text').innerText = `${gameState.ai.energy} / ${gameState.ai.maxEnergy}`;
+
+            // Render Hand
+            const handContainer = document.getElementById('player-hand');
+            handContainer.innerHTML = '';
+            gameState.player.hand.forEach((card, index) => {
+                const cardEl = document.createElement('div');
+                cardEl.className = `relative flex-shrink-0 w-24 h-32 rounded cursor-pointer border ${gameState.selectedHandIndex === index ? 'border-yellow-400 scale-105' : 'border-cyan-500'}`;
+                cardEl.innerHTML = generateCardArtSVG(card, card.tier);
+                cardEl.onclick = () => {
+                    if (gameState.selectedHandIndex === null) {
+                        gameState.selectedHandIndex = index;
+                    } else if (gameState.selectedHandIndex === index) {
+                        gameState.selectedHandIndex = null;
+                    } else {
+                        const card1 = gameState.player.hand[gameState.selectedHandIndex];
+                        const card2 = gameState.player.hand[index];
+                        if (card1.id === card2.id && card1.tier === card2.tier && card1.tier < 4) {
+                            card1.tier += 1;
+                            gameState.player.hand.splice(index, 1);
+                            gameState.selectedHandIndex = null;
+                        } else {
+                            gameState.selectedHandIndex = index;
+                        }
+                    }
+                    updateGameUI();
+                };
+                handContainer.appendChild(cardEl);
+            });
+
+            // Render Slots
+            ['player', 'ai'].forEach(owner => {
+                const container = document.getElementById(`${owner}-slots`);
+                container.innerHTML = '';
+                for (let i = 0; i < 4; i++) {
+                    const card = gameState[owner].board[i];
+                    const slot = document.createElement('div');
+                    slot.className = `h-28 md:h-32 rounded border ${owner === 'player' ? 'border-cyan-800 bg-slate-950' : 'border-red-900 bg-slate-950'} flex items-center justify-center cursor-pointer`;
+                    if (card) {
+                        slot.innerHTML = generateCardArtSVG(card, card.tier);
+                    } else {
+                        slot.innerHTML = `<span class="text-[10px] text-slate-600 font-mono-cyber">槽位 ${i+1}</span>`;
+                        if (owner === 'player') {
+                            slot.onclick = () => {
+                                if (gameState.selectedHandIndex !== null) {
+                                    const c = gameState.player.hand[gameState.selectedHandIndex];
+                                    if (gameState.player.energy >= c.cost) {
+                                        gameState.player.energy -= c.cost;
+                                        gameState.player.board[i] = c;
+                                        gameState.player.hand.splice(gameState.selectedHandIndex, 1);
+                                        gameState.selectedHandIndex = null;
+                                        updateGameUI();
+                                    }
+                                }
+                            };
+                        }
+                    }
+                    container.appendChild(slot);
+                }
+            });
+        }
+
+        document.getElementById('end-turn-btn').onclick = () => {
+            // Player Attack
+            for(let i=0; i<4; i++) {
+                if(gameState.player.board[i]) {
+                    const pwr = getCardPower(gameState.player.board[i]);
+                    if(gameState.ai.board[i]) {
+                        gameState.ai.board[i] = null;
+                    } else {
+                        gameState.ai.hp = Math.max(0, gameState.ai.hp - pwr);
+                    }
+                }
+            }
+            // AI Action
+            if(gameState.ai.hand.length && !gameState.ai.board[0]) {
+                gameState.ai.board[0] = gameState.ai.hand.pop();
+            }
+            // Reset Energy & Draw
+            gameState.player.energy = gameState.player.maxEnergy;
+            if(gameState.player.deck.length) gameState.player.hand.push(gameState.player.deck.pop());
+            updateGameUI();
+        };
+
+        document.getElementById('auto-synth-btn').onclick = () => {
+            const hand = gameState.player.hand;
+            for(let i=0; i<hand.length; i++) {
+                for(let j=i+1; j<hand.length; j++) {
+                    if(hand[i].id === hand[j].id && hand[i].tier === hand[j].tier && hand[i].tier < 4) {
+                        hand[i].tier += 1;
+                        hand.splice(j, 1);
+                        updateGameUI();
+                        return;
+                    }
+                }
+            }
+        };
+
+        window.onload = initEmbeddedGame;
+    </script>
+</body>
+</html>
